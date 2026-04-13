@@ -25,6 +25,7 @@ public class PrayerTimeLogic {
 
     public static class PrayerState {
         public String currentPrayerName;
+        public String currentPrayerTime; // ADDED: To hold the actual time instead of "Passed"
         public String nextPrayerName;
         public String nextPrayerTime;
         public String countdownDisplay;
@@ -53,13 +54,11 @@ public class PrayerTimeLogic {
         }
 
         try {
-            // Get current time in minutes since midnight
             Calendar now = Calendar.getInstance();
             int currentMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE);
             int currentSeconds = now.get(Calendar.SECOND);
             long currentTotalSeconds = currentMinutes * 60L + currentSeconds;
 
-            // Parse all prayer times
             List<PrayerTimeInfo> allPrayers = new ArrayList<>();
             for (String prayerName : PRAYER_ORDER) {
                 String timeStr = prayerTimes.get(prayerName);
@@ -69,7 +68,6 @@ public class PrayerTimeLogic {
                 }
             }
 
-            // Find current and next prayer
             PrayerTimeInfo currentPrayer = null;
             PrayerTimeInfo nextPrayer = null;
 
@@ -82,7 +80,6 @@ public class PrayerTimeLogic {
                 }
             }
 
-            // If no next prayer found (past Isha), next is Fajr tomorrow
             if (nextPrayer == null && !allPrayers.isEmpty()) {
                 nextPrayer = allPrayers.get(0);
             }
@@ -93,29 +90,23 @@ public class PrayerTimeLogic {
                 return state;
             }
 
-            // Check if in "Time passed" state (within 25 minutes of current prayer)
             if (currentPrayer != null) {
                 long secondsSinceCurrent = currentTotalSeconds - (currentPrayer.minutesSinceMidnight * 60L);
 
                 if (secondsSinceCurrent >= 0 && secondsSinceCurrent < TWENTY_FIVE_MINUTES_S) {
                     state.currentPrayerName = currentPrayer.name;
+                    state.currentPrayerTime = currentPrayer.timeStr; // ADDED: Captures the time (e.g. "15:30")
                     state.isTimePassed = true;
-
-                    // THIS IS THE CRUCIAL LINE ADDED FOR THE CHRONOMETER
                     state.timeUntilNextSec = secondsSinceCurrent;
-
                     state.countdownDisplay = formatSeconds(secondsSinceCurrent);
                     return state;
                 }
             }
 
-            // Normal countdown state
             long secondsUntilNext;
             if (nextPrayer.minutesSinceMidnight > currentMinutes) {
-                // Prayer is today
                 secondsUntilNext = (nextPrayer.minutesSinceMidnight * 60L) - currentTotalSeconds;
             } else {
-                // Prayer is tomorrow
                 long secondsUntilMidnight = (24 * 60 * 60) - currentTotalSeconds;
                 secondsUntilNext = secondsUntilMidnight + (nextPrayer.minutesSinceMidnight * 60L);
             }

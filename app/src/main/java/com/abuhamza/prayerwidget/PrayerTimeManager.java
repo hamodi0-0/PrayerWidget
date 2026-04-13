@@ -21,19 +21,15 @@ public class PrayerTimeManager {
     private static final String TAG = "PrayerTimeManager";
     private static final String PREFS_NAME = "prayer_times_cache";
     private static final String CACHE_KEY = "prayer_times_";
-
-    // New Administrative Capital coordinates
-    private static final double LATITUDE = 30.0056;
-    private static final double LONGITUDE = 31.4778;
     private static final int METHOD = 5; // Egyptian General Authority method
 
     private Context context;
-    private SharedPreferences prefs;
+    private SharedPreferences cachePrefs;
     private OkHttpClient httpClient;
 
     public PrayerTimeManager(Context context) {
         this.context = context;
-        this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        this.cachePrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         this.httpClient = new OkHttpClient();
     }
 
@@ -43,7 +39,7 @@ public class PrayerTimeManager {
      */
     public HashMap<String, String> getPrayerTimes(String dateString) {
         // First, check if we have cached data for this date
-        String cachedData = prefs.getString(CACHE_KEY + dateString, null);
+        String cachedData = cachePrefs.getString(CACHE_KEY + dateString, null);
         if (cachedData != null) {
             Log.d(TAG, "Using cached prayer times for " + dateString);
             return parsePrayerTimesJson(cachedData);
@@ -55,15 +51,23 @@ public class PrayerTimeManager {
     }
 
     /**
-     * Fetch prayer times from Aladhan API
+     * Fetch prayer times from Aladhan API using saved location
      */
     private HashMap<String, String> fetchFromAPI(String dateString) {
         try {
-            // API endpoint for New Administrative Capital
-            String url = String.format(
-                    "https://api.aladhan.com/v1/timings/%s?latitude=%.4f&longitude=%.4f&method=%d",
-                    dateString, LATITUDE, LONGITUDE, METHOD
+            // Retrieve coordinates from the location_prefs file
+            SharedPreferences locPrefs = context.getSharedPreferences("location_prefs", Context.MODE_PRIVATE);
+
+            // Default to New Cairo coordinates if none are saved
+            float lat = locPrefs.getFloat("lat", 30.0056f);
+            float lon = locPrefs.getFloat("lon", 31.4778f);
+
+            String url = String.format(Locale.US,
+                    "https://api.aladhan.com/v1/timings/%s?latitude=%f&longitude=%f&method=%d",
+                    dateString, lat, lon, METHOD
             );
+
+            Log.d(TAG, "Requesting URL: " + url);
 
             Request request = new Request.Builder()
                     .url(url)
@@ -75,7 +79,7 @@ public class PrayerTimeManager {
                 String responseBody = response.body().string();
 
                 // Cache the response
-                prefs.edit().putString(CACHE_KEY + dateString, responseBody).apply();
+                cachePrefs.edit().putString(CACHE_KEY + dateString, responseBody).apply();
                 Log.d(TAG, "Prayer times cached for " + dateString);
 
                 return parsePrayerTimesJson(responseBody);
@@ -91,7 +95,6 @@ public class PrayerTimeManager {
 
     /**
      * Parse the JSON response from Aladhan API
-     * Extracts: Fajr, Shurouk, Dhuhr, Asr, Maghrib, Isha
      */
     private HashMap<String, String> parsePrayerTimesJson(String jsonResponse) {
         try {
@@ -123,7 +126,7 @@ public class PrayerTimeManager {
     }
 
     /**
-     * Get today's date in YYYY-MM-DD format for API
+     * Get today's date in DD-MM-YYYY format for API
      */
     public static String getTodayDateString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
@@ -134,7 +137,7 @@ public class PrayerTimeManager {
      * Clear all cached prayer times
      */
     public void clearCache() {
-        prefs.edit().clear().apply();
+        cachePrefs.edit().clear().apply();
         Log.d(TAG, "Cache cleared");
     }
 }
