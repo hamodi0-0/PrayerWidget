@@ -22,7 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Maghrib"
+            android:text="Prayer"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="06:26"
+            android:text="00:00"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
@@ -55,15 +55,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Time for Adhan"
-            android:textSize="11sp"
-            android:textColor="#FFFFFF"
-            android:gravity="center" />
+            android:textSize="9sp"
+            android:gravity="center"
+            android:textColor="#FFFFFF" />
 
-        <TextView
+        <Chronometer
             android:id="@+id/countdown_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1:56:25"
+            android:text="00:00:00"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"

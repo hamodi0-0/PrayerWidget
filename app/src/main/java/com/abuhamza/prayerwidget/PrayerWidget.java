@@ -17,54 +17,60 @@ public class PrayerWidget extends AppWidgetProvider {
         Log.d(TAG, "onUpdate called");
 
         for (int appWidgetId : appWidgetIds) {
-            // Fetch in background thread
-            new FetchPrayerTimesTask(context, appWidgetManager, appWidgetId).execute();
+            new UpdateWidgetTask(context, appWidgetManager, appWidgetId).execute();
         }
     }
 
-    /**
-     * Background task to fetch prayer times without blocking main thread
-     */
-    private static class FetchPrayerTimesTask extends AsyncTask<Void, Void, HashMap<String, String>> {
+    private static class UpdateWidgetTask extends AsyncTask<Void, Void, PrayerTimeLogic.PrayerState> {
         private Context context;
         private AppWidgetManager appWidgetManager;
         private int appWidgetId;
 
-        FetchPrayerTimesTask(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        UpdateWidgetTask(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
             this.context = context;
             this.appWidgetManager = appWidgetManager;
             this.appWidgetId = appWidgetId;
         }
 
         @Override
-        protected HashMap<String, String> doInBackground(Void... voids) {
+        protected PrayerTimeLogic.PrayerState doInBackground(Void... voids) {
+            // Get cached prayer times (no API call)
             PrayerTimeManager manager = new PrayerTimeManager(context);
             String today = PrayerTimeManager.getTodayDateString();
+            HashMap<String, String> prayerTimes = manager.getPrayerTimes(today);
 
-            Log.d(TAG, "Fetching prayer times for: " + today);
-            return manager.getPrayerTimes(today);
+            // Calculate state based on CURRENT time
+            if (prayerTimes != null) {
+                return PrayerTimeLogic.getPrayerState(prayerTimes);
+            }
+            return null;
         }
 
         @Override
-        protected void onPostExecute(HashMap<String, String> prayerTimes) {
+        protected void onPostExecute(PrayerTimeLogic.PrayerState state) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-            if (prayerTimes != null) {
-                Log.d(TAG, "Successfully fetched prayer times: " + prayerTimes.toString());
+            if (state != null) {
+                if (state.isTimePassed) {
+                    // For the "Time Passed" state, we stop the chronometer
+                    // and just show the static text you already calculated
+                    views.setChronometer(R.id.countdown_time, 0, null, false);
+                    views.setTextViewText(R.id.prayer_name, state.currentPrayerName);
+                    views.setTextViewText(R.id.prayer_time, "Passed");
+                    views.setTextViewText(R.id.countdown_time, state.countdownDisplay);
+                } else {
+                    views.setTextViewText(R.id.prayer_name, state.nextPrayerName);
+                    views.setTextViewText(R.id.prayer_time, state.nextPrayerTime);
 
-                String fajr = prayerTimes.get("Fajr");
-                String dhuhr = prayerTimes.get("Dhuhr");
-                String maghrib = prayerTimes.get("Maghrib");
+                    // START THE REAL-TIME COUNTDOWN
+                    long baseTime = PrayerTimeLogic.getChronometerBase(state.timeUntilNextSec);
 
-                views.setTextViewText(R.id.prayer_name, "Fajr");
-                views.setTextViewText(R.id.prayer_time, fajr);
-                views.setTextViewText(R.id.countdown_time, "Test: " + dhuhr + " / " + maghrib);
+                    // setChronometer(viewId, base, format, started)
+                    views.setChronometer(R.id.countdown_time, baseTime, null, true);
 
-            } else {
-                Log.e(TAG, "Failed to fetch prayer times");
-                views.setTextViewText(R.id.prayer_name, "Error");
-                views.setTextViewText(R.id.prayer_time, "N/A");
-                views.setTextViewText(R.id.countdown_time, "API failed");
+                    // Set it to count down (Requires API 24+)
+                    views.setChronometerCountDown(R.id.countdown_time, true);
+                }
             }
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
