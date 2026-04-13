@@ -59,8 +59,6 @@ public class PrayerTimeLogic {
             int currentSeconds = now.get(Calendar.SECOND);
             long currentTotalSeconds = currentMinutes * 60L + currentSeconds;
 
-            Log.d(TAG, "Current time: " + currentMinutes + " minutes, " + currentSeconds + " seconds");
-
             // Parse all prayer times
             List<PrayerTimeInfo> allPrayers = new ArrayList<>();
             for (String prayerName : PRAYER_ORDER) {
@@ -102,8 +100,11 @@ public class PrayerTimeLogic {
                 if (secondsSinceCurrent >= 0 && secondsSinceCurrent < TWENTY_FIVE_MINUTES_S) {
                     state.currentPrayerName = currentPrayer.name;
                     state.isTimePassed = true;
+
+                    // THIS IS THE CRUCIAL LINE ADDED FOR THE CHRONOMETER
+                    state.timeUntilNextSec = secondsSinceCurrent;
+
                     state.countdownDisplay = formatSeconds(secondsSinceCurrent);
-                    Log.d(TAG, "Time passed state: " + state.countdownDisplay);
                     return state;
                 }
             }
@@ -125,9 +126,6 @@ public class PrayerTimeLogic {
             state.countdownDisplay = formatSeconds(secondsUntilNext);
             state.timeUntilNextSec = secondsUntilNext;
 
-            Log.d(TAG, "Next: " + nextPrayer.name + " at " + nextPrayer.timeStr +
-                    ", countdown: " + state.countdownDisplay);
-
             return state;
 
         } catch (Exception e) {
@@ -139,9 +137,6 @@ public class PrayerTimeLogic {
         }
     }
 
-    /**
-     * Parse "HH:MM" to minutes since midnight
-     */
     private static int parseTimeStringToMinutes(String timeStr) throws Exception {
         String[] parts = timeStr.split(":");
         int hours = Integer.parseInt(parts[0]);
@@ -149,9 +144,6 @@ public class PrayerTimeLogic {
         return hours * 60 + minutes;
     }
 
-    /**
-     * Format seconds to "H:MM:SS"
-     */
     private static String formatSeconds(long totalSeconds) {
         long hours = totalSeconds / 3600;
         long minutes = (totalSeconds % 3600) / 60;
@@ -169,9 +161,5 @@ public class PrayerTimeLogic {
             this.timeStr = timeStr;
             this.minutesSinceMidnight = minutesSinceMidnight;
         }
-    }
-    public static long getChronometerBase(long secondsUntilNext) {
-        // Chronometer needs: (Current System UpTime) + (Remaining Seconds)
-        return SystemClock.elapsedRealtime() + (secondsUntilNext * 1000);
     }
 }
