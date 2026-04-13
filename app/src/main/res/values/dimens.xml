@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="time_large">40sp</dimen>
+    <dimen name="prayer_name_size">32sp</dimen>
+    <dimen name="countdown_size">48sp</dimen>
+    <dimen name="label_size">14sp</dimen>
+</resources>
