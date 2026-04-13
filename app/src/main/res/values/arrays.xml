@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="egypt_cities">
+        <item>Cairo, Egypt</item>
+        <item>Alexandria, Egypt</item>
+        <item>Giza, Egypt</item>
+        <item>Shubra El-Kheima, Egypt</item>
+        <item>Port Said, Egypt</item>
+        <item>Suez, Egypt</item>
+        <item>Luxor, Egypt</item>
+        <item>Mansoura, Egypt</item>
+        <item>Tanta, Egypt</item>
+        <item>Asyut, Egypt</item>
+        <item>Ismailia, Egypt</item>
+        <item>Fayyum, Egypt</item>
+        <item>Zagazig, Egypt</item>
+        <item>Aswan, Egypt</item>
+        <item>Damietta, Egypt</item>
+        <item>Damanhur, Egypt</item>
+        <item>Minya, Egypt</item>
+        <item>Beni Suef, Egypt</item>
+        <item>Qena, Egypt</item>
+        <item>Sohag, Egypt</item>
+        <item>Hurghada, Egypt</item>
+        <item>Shibin El Kom, Egypt</item>
+        <item>Banha, Egypt</item>
+        <item>Kafr el-Sheikh, Egypt</item>
+        <item>Arish, Egypt</item>
+        <item>Mallawi, Egypt</item>
+        <item>Bilbais, Egypt</item>
+        <item>Marsa Matruh, Egypt</item>
+        <item>Idfu, Egypt</item>
+        <item>Mit Ghamr, Egypt</item>
+        <item>Desouk, Egypt</item>
+        <item>Qalyub, Egypt</item>
+        <item>Abu Kabir, Egypt</item>
+        <item>Kafr el-Dawwar, Egypt</item>
+        <item>Girga, Egypt</item>
+
+        <item>New Cairo, Egypt</item>
+        <item>6th of October City, Egypt</item>
+        <item>Sheikh Zayed City, Egypt</item>
+        <item>Madinaty, Egypt</item>
+        <item>El Shorouk, Egypt</item>
+        <item>Obour City, Egypt</item>
+        <item>Badr City, Egypt</item>
+        <item>Rehab City, Egypt</item>
+        <item>10th of Ramadan City, Egypt</item>
+        <item>New Capital, Egypt</item>
+        <item>New Alamein, Egypt</item>
+        <item>New Damietta, Egypt</item>
+        <item>Nasr City, Egypt</item>
+        <item>Heliopolis, Egypt</item>
+        <item>Maadi, Egypt</item>
+
+        <item>Mecca, Saudi Arabia</item>
+        <item>Medina, Saudi Arabia</item>
+        <item>Riyadh, Saudi Arabia</item>
+        <item>Jeddah, Saudi Arabia</item>
+        <item>Dubai, UAE</item>
+        <item>Abu Dhabi, UAE</item>
+        <item>Kuwait City, Kuwait</item>
+        <item>Doha, Qatar</item>
+        <item>Amman, Jordan</item>
+        <item>Istanbul, Turkey</item>
+        <item>London, UK</item>
+        <item>Paris, France</item>
+        <item>New York, USA</item>
+    </string-array>
+</resources>

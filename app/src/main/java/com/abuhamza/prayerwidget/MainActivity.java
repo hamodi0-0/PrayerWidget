@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AutoCompleteTextView;
+import android.widget.ArrayAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,10 +21,18 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
-    private EditText cityInput;
+    // CHANGE THIS from EditText to AutoCompleteTextView
+    private AutoCompleteTextView cityInput;
     private TextView currentLocText;
     private SharedPreferences prefs;
+
+    // Add a list of suggestions (I included some local ones based on your location!)
+    private static final String[] CITY_SUGGESTIONS = new String[] {
+            "Cairo, Egypt", "New Cairo City, Egypt", "Giza, Egypt", "Alexandria, Egypt",
+            "Mecca, Saudi Arabia", "Medina, Saudi Arabia", "Riyadh, Saudi Arabia",
+            "Dubai, UAE", "Abu Dhabi, UAE", "London, UK", "New York, USA",
+            "Istanbul, Turkey", "Kuala Lumpur, Malaysia", "Jakarta, Indonesia"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +43,16 @@ public class MainActivity extends AppCompatActivity {
         cityInput = findViewById(R.id.city_input);
         currentLocText = findViewById(R.id.current_location_text);
         Button saveBtn = findViewById(R.id.save_location_btn);
+
+        String[] cityList = getResources().getStringArray(R.array.egypt_cities);
+
+        // We use a custom layout (simple_dropdown_item_1line) for the shadcn look
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                R.layout.dropdown_item,
+                cityList
+        );
+        cityInput.setAdapter(adapter);
 
         prefs = getSharedPreferences("location_prefs", MODE_PRIVATE);
 
