@@ -33,6 +33,7 @@ public class PrayerWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        // Just trigger the task for each widget
         for (int appWidgetId : appWidgetIds) {
             new UpdateWidgetTask(context, appWidgetManager, appWidgetId).execute();
         }
@@ -63,8 +64,21 @@ public class PrayerWidget extends AppWidgetProvider {
 
         @Override
         protected void onPostExecute(PrayerTimeLogic.PrayerState state) {
+// This is the views object that actually goes to the screen
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
+            // --- NEW CODE: Attach the click listener here ---
+            Intent intent = new Intent(context, MainActivity.class);
+            // This flag is best practice when launching from a widget
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            views.setOnClickPendingIntent(R.id.widget_container, pendingIntent);
             if (state != null) {
                 long nowMs = System.currentTimeMillis();
                 long triggerAlarmInMs = 0;
