@@ -5,6 +5,8 @@
         <strong>A modern, dark-themed Android widget for tracking Islamic prayer times.</strong>
       </p>
  </p>
+
+
 ---
 
 ## Overview
