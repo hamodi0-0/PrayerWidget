@@ -1,4 +1,5 @@
-# Prayer Times Widget
+# Prayer Times Widget 
+![PrayerWidgetLogo](assets/PrayerWidgetLogoRounded.png)
 
 This Android application provides a home screen widget and a configuration interface to track Islamic prayer times based on a specified location.
 
