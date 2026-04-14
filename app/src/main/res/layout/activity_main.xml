@@ -17,22 +17,37 @@
         android:layout_marginTop="64dp"
         android:layout_marginBottom="32dp" />
 
-    <AutoCompleteTextView
-        android:id="@+id/city_input"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:hint="Enter City Name (e.g Cairo)"
-        android:textColorHint="#A1A1AA"
-        android:textColor="#FAFAFA"
-        android:background="@drawable/input_rounded"
-        android:popupBackground="#18181B"
-        android:dropDownSelector="#27272A"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:completionThreshold="1"
-        android:maxLines="1"
-        android:inputType="textNoSuggestions"
-        android:layout_marginBottom="24dp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="24dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/city_input"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:hint="Enter City Name..."
+            android:textColorHint="#A1A1AA"
+            android:textColor="#FAFAFA"
+            android:background="@drawable/input_rounded"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:completionThreshold="1"
+            android:maxLines="1"
+            android:inputType="textNoSuggestions" />
+
+        <Button
+            android:id="@+id/gps_location_btn"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/input_rounded"
+            android:text="📍"
+            android:textSize="20sp"
+            android:textColor="#FAFAFA" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"

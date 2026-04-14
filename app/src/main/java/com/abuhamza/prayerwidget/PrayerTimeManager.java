@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,39 +34,47 @@ public class PrayerTimeManager {
         this.httpClient = new OkHttpClient();
     }
 
-    /**
-     * Fetch prayer times for a specific date from API
-     * Returns cached data if available, otherwise fetches from API
-     */
     public HashMap<String, String> getPrayerTimes(String dateString) {
-        // First, check if we have cached data for this date
         String cachedData = cachePrefs.getString(CACHE_KEY + dateString, null);
         if (cachedData != null) {
             Log.d(TAG, "Using cached prayer times for " + dateString);
             return parsePrayerTimesJson(cachedData);
         }
 
-        // If not cached, fetch from API
         Log.d(TAG, "Fetching prayer times for " + dateString + " from API");
         return fetchFromAPI(dateString);
     }
 
-    /**
-     * Fetch prayer times from Aladhan API using saved location
-     */
     private HashMap<String, String> fetchFromAPI(String dateString) {
         try {
-            // Retrieve coordinates from the location_prefs file
             SharedPreferences locPrefs = context.getSharedPreferences("location_prefs", Context.MODE_PRIVATE);
+            String inputMode = locPrefs.getString("input_mode", "manual");
+            String url;
 
-            // Default to New Cairo coordinates if none are saved
-            float lat = locPrefs.getFloat("lat", 30.0056f);
-            float lon = locPrefs.getFloat("lon", 31.4778f);
+            if ("gps".equals(inputMode)) {
+                // GPS Mode: Use precise Latitude and Longitude
+                float lat = locPrefs.getFloat("lat", 30.0056f);
+                float lng = locPrefs.getFloat("lng", 31.4778f);
+                url = String.format(Locale.US,
+                        "https://api.aladhan.com/v1/timings/%s?latitude=%f&longitude=%f&method=%d",
+                        dateString, lat, lng, METHOD
+                );
+            } else {
+                // Manual Text Mode: Use City and Country
+                String displayLoc = locPrefs.getString("display_location", "New Cairo City, Egypt");
+                String[] parts = displayLoc.split(",");
+                String city = parts[0].trim();
+                String country = parts.length > 1 ? parts[1].trim() : "";
 
-            String url = String.format(Locale.US,
-                    "https://api.aladhan.com/v1/timings/%s?latitude=%f&longitude=%f&method=%d",
-                    dateString, lat, lon, METHOD
-            );
+                // URL encode the strings just in case there are spaces (e.g. "New York")
+                String encodedCity = URLEncoder.encode(city, "UTF-8");
+                String encodedCountry = URLEncoder.encode(country, "UTF-8");
+
+                url = String.format(Locale.US,
+                        "https://api.aladhan.com/v1/timingsByCity/%s?city=%s&country=%s&method=%d",
+                        dateString, encodedCity, encodedCountry, METHOD
+                );
+            }
 
             Log.d(TAG, "Requesting URL: " + url);
 
@@ -77,11 +86,8 @@ public class PrayerTimeManager {
 
             if (response.isSuccessful() && response.body() != null) {
                 String responseBody = response.body().string();
-
-                // Cache the response
                 cachePrefs.edit().putString(CACHE_KEY + dateString, responseBody).apply();
                 Log.d(TAG, "Prayer times cached for " + dateString);
-
                 return parsePrayerTimesJson(responseBody);
             } else {
                 Log.e(TAG, "API Error: " + response.code());
@@ -93,9 +99,6 @@ public class PrayerTimeManager {
         }
     }
 
-    /**
-     * Parse the JSON response from Aladhan API
-     */
     private HashMap<String, String> parsePrayerTimesJson(String jsonResponse) {
         try {
             Gson gson = new Gson();
@@ -125,17 +128,11 @@ public class PrayerTimeManager {
         }
     }
 
-    /**
-     * Get today's date in DD-MM-YYYY format for API
-     */
     public static String getTodayDateString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         return sdf.format(new Date());
     }
 
-    /**
-     * Clear all cached prayer times
-     */
     public void clearCache() {
         cachePrefs.edit().clear().apply();
         Log.d(TAG, "Cache cleared");
