@@ -9,14 +9,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginTop="32dp"
         android:paddingHorizontal="16dp">
+
 
         <ImageButton
             android:id="@+id/btn_settings"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"  android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_mylocation"
             app:tint="#FAFAFA" />
 
