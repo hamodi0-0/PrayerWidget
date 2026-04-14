@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:background="#09090B">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prayer Times Location"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="#FAFAFA" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/city_input"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="56dp"
+            android:hint="Enter City Name..."
+            android:textColorHint="#A1A1AA"
+            android:textColor="#FAFAFA"
+            android:paddingHorizontal="16dp"
+            android:backgroundTint="#27272A"
+            android:background="@drawable/input_rounded"
+            android:layout_marginEnd="12dp"/>
+
+        <ImageButton
+            android:id="@+id/gps_location_btn"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/input_rounded"
+            android:backgroundTint="#27272A"
+            android:src="@android:drawable/ic_menu_mylocation"
+            app:tint="#EF4444" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="* Suggestions are limited. You can manually type any City, Country even if it doesn't appear in the list."
+        android:textSize="12sp"
+        android:textColor="#A1A1AA"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/save_location_btn"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Update Location"
+        android:backgroundTint="#FAFAFA"
+        android:textColor="#09090B"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp" />
+
+    <TextView
+        android:id="@+id/current_location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current: None"
+        android:textSize="14sp"
+        android:textColor="#A1A1AA" />
+
+</LinearLayout>

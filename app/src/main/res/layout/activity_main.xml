@@ -1,83 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#09090B"
-    android:padding="24dp"
-    android:gravity="center_horizontal">
+    android:background="#09090B">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Prayer Times Location"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#FAFAFA"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="32dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingHorizontal="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_settings"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"  android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_mylocation"
+            app:tint="#FAFAFA" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Prayer Times"
+            android:textColor="#FAFAFA"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="24dp">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="32dp"
+        android:paddingTop="24dp">
 
-        <AutoCompleteTextView
-            android:id="@+id/city_input"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_weight="1"
-            android:hint="Enter City Name..."
-            android:textColorHint="#A1A1AA"
+        <TextView
+            android:id="@+id/tv_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time left for Fajr"
+            android:textColor="#A1A1AA"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_main_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00:00"
             android:textColor="#FAFAFA"
-            android:background="@drawable/input_rounded"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:completionThreshold="1"
-            android:maxLines="1"
-            android:inputType="textNoSuggestions" />
+            android:textSize="64sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/gps_location_btn"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/input_rounded"
-            android:text="📍"
-            android:textSize="20sp"
-            android:textColor="#FAFAFA" />
+        <TextView
+            android:id="@+id/tv_gregorian_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#FAFAFA"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_hijri_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#A1A1AA"
+            android:textSize="14sp" />
     </LinearLayout>
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="* Suggestions are limited. You can manually type any City, Country even if it doesn't appear in the list."
-        android:textColor="#71717A"
-        android:textSize="12sp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
-        android:paddingStart="4dp"
-        android:lineSpacingExtra="2dp" />
-    <Button
-        android:id="@+id/save_location_btn"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:text="Update Location"
-        android:textAllCaps="false"
-        android:textColor="#09090B"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:background="@drawable/button_rounded"
-        android:stateListAnimator="@null"
-        android:layout_marginBottom="32dp" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/current_location_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current: New Cairo City"
-        android:textColor="#A1A1AA"
-        android:textSize="14sp" />
-
+        <LinearLayout
+            android:id="@+id/prayer_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="24dp" />
+    </ScrollView>
 </LinearLayout>

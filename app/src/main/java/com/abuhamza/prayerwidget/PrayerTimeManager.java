@@ -109,9 +109,12 @@ public class PrayerTimeManager {
                 return null;
             }
 
-            JsonObject timings = response.getAsJsonObject("data").getAsJsonObject("timings");
+            JsonObject data = response.getAsJsonObject("data");
+            JsonObject timings = data.getAsJsonObject("timings");
+            JsonObject dateInfo = data.getAsJsonObject("date");
 
             HashMap<String, String> prayerTimes = new HashMap<>();
+            // Prayer Times
             prayerTimes.put("Fajr", timings.get("Fajr").getAsString().substring(0, 5));
             prayerTimes.put("Shurouk", timings.get("Sunrise").getAsString().substring(0, 5));
             prayerTimes.put("Dhuhr", timings.get("Dhuhr").getAsString().substring(0, 5));
@@ -119,7 +122,19 @@ public class PrayerTimeManager {
             prayerTimes.put("Maghrib", timings.get("Maghrib").getAsString().substring(0, 5));
             prayerTimes.put("Isha", timings.get("Isha").getAsString().substring(0, 5));
 
-            Log.d(TAG, "Parsed prayer times: " + prayerTimes.toString());
+            // Dates (Hijri & Gregorian)
+            JsonObject hijri = dateInfo.getAsJsonObject("hijri");
+            String hijriString = hijri.get("day").getAsString() + " " +
+                    hijri.getAsJsonObject("month").get("en").getAsString() + " " +
+                    hijri.get("year").getAsString() + " AH"; // Use "ar" instead of "en" if you want Arabic text
+            prayerTimes.put("HijriDate", hijriString);
+
+            JsonObject gregorian = dateInfo.getAsJsonObject("gregorian");
+            String gregString = gregorian.getAsJsonObject("weekday").get("en").getAsString() + ", " +
+                    gregorian.get("day").getAsString() + " " +
+                    gregorian.getAsJsonObject("month").get("en").getAsString();
+            prayerTimes.put("GregorianDate", gregString);
+
             return prayerTimes;
 
         } catch (Exception e) {
